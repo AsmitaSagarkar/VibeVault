@@ -1,0 +1,24 @@
+import express from 'express';
+import {connecttoDb} from '../db.js';
+
+const router = express.Router();
+
+router.post('/',async(req,res)=>{
+    const {mood,message,sentiments} = req.body;
+    try {
+        const db = await connecttoDb();
+        const [result] = await db.execute('INSERT INTO MOODLOGS (mood,message,sentiments) VALUES (?,?,?)',[mood,message,sentiments]);
+        res.status(200).json({
+            success:true,
+            id:result.insertId
+        });
+        }
+        catch(error){
+            res.status(500).json({
+                success:false,
+                message:'Error inserting mood data',
+                details:error.message
+            })
+        }
+})
+export default router;
