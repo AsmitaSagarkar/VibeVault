@@ -1,5 +1,5 @@
 'use client';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 
 export default function Home() {
@@ -9,6 +9,16 @@ export default function Home() {
   const [message, setMessage] = useState("");
   const [toast, setToast] = useState("");
 
+  useEffect(() =>{
+    const fetchMood = async()=>{
+      const res = await fetch("http://localhost:5000/api/mood");
+      const data =await res.json();
+      if(data.success){
+        setMood(data.mood);
+      }
+    };
+    fetchMood();
+  },[]);
 
   const handleSubmit = async (e: any) => {
 

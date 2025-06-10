@@ -21,4 +21,19 @@ router.post('/',async(req,res)=>{
             })
         }
 })
+
+router.get('/',async(req,res)=>{
+    try{
+        const db = await connecttoDb();
+        const [rows] =await  db.execute('SELECT * FROM MOODLOGS ORDER BY createdAt DESC');
+        res.status(200).json({
+            success:true,
+            data:rows
+        })
+    }catch(error){
+        res.status(500).json({
+            success:false,message:'Error fetching mood data'
+        })
+    }
+})
 export default router;
