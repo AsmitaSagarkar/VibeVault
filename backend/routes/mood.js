@@ -36,4 +36,24 @@ router.get('/',async(req,res)=>{
         })
     }
 })
+
+router.get('/mood/stats',async(req,res)=>{
+    try{
+        const db = await connecttoDb();
+        const [rows]=await db.execute('SELECT mood,COUNT(*) AS count FROM MOODLOGS GROUP BY mood');
+        res.status(200).json({
+            success:true,
+            data:rows
+        });
+
+        
+    }
+    catch(error){
+        res.status(500).json({
+            success:false,
+            message:"Error fetching mood statistics",
+            detials : error.message
+        });
+    }
+})
 export default router;
