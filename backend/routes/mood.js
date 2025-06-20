@@ -1,6 +1,6 @@
 import express from 'express';
 import {connecttoDb} from '../db.js';
-
+import axios from 'axios';
 const router = express.Router();
 
 router.post('/',async(req,res)=>{
@@ -37,7 +37,7 @@ router.get('/',async(req,res)=>{
     }
 })
 
-router.get('/mood/stats',async(req,res)=>{
+router.get('/stats',async(req,res)=>{
     try{
         const db = await connecttoDb();
         const [rows]=await db.execute('SELECT mood,COUNT(*) AS count FROM MOODLOGS GROUP BY mood');
@@ -56,4 +56,13 @@ router.get('/mood/stats',async(req,res)=>{
         });
     }
 })
+router.get('/quote', async (req, res) => {
+  try {
+    const result = await axios.get('https://zenquotes.io/api/random');
+    const { q, a } = result.data[0];
+    res.json({ success: true, quote: `"${q}" - ${a}` });
+  } catch (err) {
+    res.status(500).json({ success: false, message: "Quote fetch failed", error: err.message });
+  }
+});
 export default router;
