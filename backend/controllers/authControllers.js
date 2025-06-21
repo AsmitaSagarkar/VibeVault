@@ -18,7 +18,7 @@ export const register = async (req,res)=>{
         const db = await connecttoDb();
         await db.query('INSERT INTO users(name,email,password)VALUES(?,?,?)',[name,email,hashed]);
         return res.status(201).json({
-            message : "User registeres successfully"
+            message : "User registered successfully"
         })
     }catch(err){
         return res.status(500).json({
@@ -57,6 +57,7 @@ export const login = async(req,res)=>{
 };
 export const getUsers = async(req,res)=>{
     const token = req.cookies.token;
+    console.log(token);
     if(!token){
         return res.status(401).json({
             success:false,
@@ -66,6 +67,7 @@ export const getUsers = async(req,res)=>{
     }
     try{
         const decode = jwt.verify(token,secret);
+        console.log("decode",decode);
         const db = await connecttoDb();
         const [rows]=await db.query('SELECT id,name,email FROM users WHERE id = ?',[decode.id]);
         res.json({
